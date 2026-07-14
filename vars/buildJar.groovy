@@ -2,5 +2,5 @@
 
 def call() {
     echo "building the application for ${env.BRANCH_NAME ?: 'unknown'}"
-    sh 'mvn package'
+    sh 'mvn clean package'
 }
