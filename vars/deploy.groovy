@@ -6,7 +6,8 @@ def call(String host,
          String credentialId,
          String imageName,
          String containerName,
-         String port) {
+         String hostPort,
+         String containerPort) {
 
     Docker docker = new Docker(this)
 
@@ -15,6 +16,7 @@ def call(String host,
         credentialId,
         imageName,
         containerName,
-        port
+        hostPort,
+        containerPort
     )
 }

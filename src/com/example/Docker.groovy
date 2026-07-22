@@ -37,7 +37,8 @@ class Docker implements Serializable {
            String credentialId,
            String imageName,
            String containerName,
-           String port) {
+           String hostPort,
+           String containerPort) {
 
     script.sshagent([credentialId]) {
         script.sh """
@@ -45,7 +46,7 @@ class Docker implements Serializable {
                 docker pull ${imageName}
                 docker stop ${containerName} || true
                 docker rm ${containerName} || true
-                docker run -d --name ${containerName} -p ${port}:${port} ${imageName}
+                docker run -d --name ${containerName} -p ${hostPort}:${containerPort} ${imageName}
             '
         """
     }
