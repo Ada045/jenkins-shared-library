@@ -33,17 +33,21 @@ class Docker implements Serializable {
         script.sh "docker push '${imageName}'"
     }
 
-    def deploy(String imageName) {
+    def deploy(String host,
+           String credentialId,
+           String imageName,
+           String containerName,
+           String port) {
 
-        def dockerCmd = """
-            docker pull ${imageName}
-            docker stop java-app || true
-            docker rm java-app || true
-            docker run -d --name java-app -p 8081:8081 ${imageName}
+    script.sshagent([credentialId]) {
+        script.sh """
+            ssh -o StrictHostKeyChecking=no ec2-user@${host} '
+                docker pull ${imageName}
+                docker stop ${containerName} || true
+                docker rm ${containerName} || true
+                docker run -d --name ${containerName} -p ${port}:${port} ${imageName}
+            '
         """
-
-        sshagent(['ec2-server-key']) {
-            script.sh "ssh -o StrictHostKeyChecking=no ec2-user@63.177.99.170 '${dockerCmd}'"
-        }
     }
+}
 }
